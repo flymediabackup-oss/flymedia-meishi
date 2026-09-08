@@ -234,23 +234,23 @@
   <aside class="editor">
     <div>
       <h1>FLY MEDIA 电子名片</h1>
-      <p class="lead">改左边字段，右边名片即时更新。公司地址默认与纸质名片一致。</p>
+      <p class="lead">公司电话已填好。姓名、职位、手机、邮箱请自己填写，右边即时预览。</p>
     </div>
 
     <form id="form" autocomplete="off">
       <div class="row-2">
         <div class="field">
           <label for="name">姓名</label>
-          <input id="name" name="name" value="章 聰源" />
+          <input id="name" name="name" value="" placeholder="姓名" />
         </div>
         <div class="field">
           <label for="kana">假名</label>
-          <input id="kana" name="kana" value="ショウ ソウゲン" />
+          <input id="kana" name="kana" value="" placeholder="假名" />
         </div>
       </div>
       <div class="field">
         <label for="title">职位</label>
-        <input id="title" name="title" value="業務担当" />
+        <input id="title" name="title" value="" placeholder="职位" />
       </div>
       <div class="field">
         <label for="tel">电话 T</label>
@@ -258,11 +258,11 @@
       </div>
       <div class="field">
         <label for="mobile">手机 M</label>
-        <input id="mobile" name="mobile" value="080-9708-5593" />
+        <input id="mobile" name="mobile" value="" placeholder="手机" />
       </div>
       <div class="field">
         <label for="email">邮箱</label>
-        <input id="email" name="email" value="zhangcongyuan@flymedia.co.jp" />
+        <input id="email" name="email" value="" placeholder="邮箱" />
       </div>
       <div class="field">
         <label for="qrMode">二维码</label>
@@ -307,17 +307,17 @@
       <article class="card" id="card">
         <div class="identity">
           <div class="name-line">
-            <span class="name" id="v-name">章 聰源</span>
-            <span class="kana" id="v-kana">ショウ ソウゲン</span>
+            <span class="name" id="v-name"></span>
+            <span class="kana" id="v-kana"></span>
           </div>
-          <div class="title" id="v-title">業務担当</div>
+          <div class="title" id="v-title"></div>
         </div>
         <img class="logo" src="assets/logo.png" alt="FLY MEDIA" />
         <div class="contact">
           <div class="company" id="v-company">株式会社 フライメディア</div>
-          <div class="info-row"><span class="k">T</span><span id="v-tel">03-5843-3063</span></div>
-          <div class="info-row"><span class="k">M</span><span id="v-mobile">080-9708-5593</span></div>
-          <div class="info-row"><span class="k">E</span><span id="v-email">zhangcongyuan@flymedia.co.jp</span></div>
+          <div class="info-row" id="row-tel"><span class="k">T</span><span id="v-tel">03-5843-3063</span></div>
+          <div class="info-row" id="row-mobile"><span class="k">M</span><span id="v-mobile"></span></div>
+          <div class="info-row" id="row-email"><span class="k">E</span><span id="v-email"></span></div>
           <div class="addr" id="v-zip">〒170-0013</div>
           <div class="addr" id="v-address">東京都豊島区東池袋2-44-2庄司ビル2F</div>
           <div class="addr" id="v-bases">海外拠点：北京・上海・台北・香港・マカオ</div>
@@ -343,14 +343,14 @@
 
     function load() {
       try {
-        const saved = JSON.parse(localStorage.getItem("flymedia-meishi") || "{}");
+        const saved = JSON.parse(localStorage.getItem("flymedia-meishi-v2") || "{}");
         fields.forEach((k) => { if (saved[k] != null) $(k).value = saved[k]; });
       } catch (_) {}
     }
 
     function save() {
       const data = Object.fromEntries(fields.map((k) => [k, $(k).value]));
-      localStorage.setItem("flymedia-meishi", JSON.stringify(data));
+      localStorage.setItem("flymedia-meishi-v2", JSON.stringify(data));
     }
 
     function vcard() {
@@ -358,20 +358,20 @@
       const parts = n.split(/\s+/);
       const family = parts[0] || "";
       const given = parts.slice(1).join(" ");
-      return [
-        "BEGIN:VCARD",
-        "VERSION:3.0",
-        "FN:" + n,
-        "N:" + family + ";" + given + ";;;",
-        "ORG:" + $("company").value.replace(/^株式会社\s*/, "株式会社"),
-        "TITLE:" + $("title").value,
-        "TEL;TYPE=WORK,VOICE:" + $("tel").value,
-        "TEL;TYPE=CELL:" + $("mobile").value,
-        "EMAIL:" + $("email").value,
-        "ADR;TYPE=WORK:;;" + $("address").value + ";;;" + $("zip").value.replace("〒","") + ";日本",
-        "URL:https://flymedia.co.jp/",
-        "END:VCARD"
-      ].join("\n");
+      const lines = ["BEGIN:VCARD", "VERSION:3.0"];
+      if (n) {
+        lines.push("FN:" + n);
+        lines.push("N:" + family + ";" + given + ";;;");
+      }
+      lines.push("ORG:" + $("company").value.replace(/^株式会社\s*/, "株式会社"));
+      if ($("title").value.trim()) lines.push("TITLE:" + $("title").value.trim());
+      if ($("tel").value.trim()) lines.push("TEL;TYPE=WORK,VOICE:" + $("tel").value.trim());
+      if ($("mobile").value.trim()) lines.push("TEL;TYPE=CELL:" + $("mobile").value.trim());
+      if ($("email").value.trim()) lines.push("EMAIL:" + $("email").value.trim());
+      lines.push("ADR;TYPE=WORK:;;" + $("address").value + ";;;" + $("zip").value.replace("〒","") + ";日本");
+      lines.push("URL:https://flymedia.co.jp/");
+      lines.push("END:VCARD");
+      return lines.join("\n");
     }
 
     function drawQr() {
@@ -391,6 +391,8 @@
     function render() {
       Object.entries(map).forEach(([k, id]) => { $(id).textContent = $(k).value; });
       $("v-kana").style.display = $("kana").value.trim() ? "" : "none";
+      $("row-mobile").style.display = $("mobile").value.trim() ? "" : "none";
+      $("row-email").style.display = $("email").value.trim() ? "" : "none";
       save();
       drawQr();
     }
