@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1c1d21" />
+  <title>FLY MEDIA 电子名片</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #161616;
+      --muted: #3a3a3a;
+      --paper: #f3f3f1;
+      --panel: #1c1d21;
+      --line: #2c2d33;
+      --accent: #d3122a;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Microsoft YaHei", sans-serif;
+      background: #ecece8;
+      color: #1a1a1a;
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      min-height: 100dvh;
+    }
+
+    .editor {
+      background: var(--panel);
+      color: #f4f4f2;
+      padding: 28px 24px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      border-right: 1px solid #000;
+    }
+    .editor h1 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+    .editor p.lead {
+      margin: 0;
+      font-size: 12px;
+      color: #b8b8b4;
+      line-height: 1.6;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      color: #9a9a96;
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+    input, select {
+      width: 100%;
+      background: #111216;
+      border: 1px solid var(--line);
+      color: #f4f4f2;
+      border-radius: 6px;
+      padding: 9px 10px;
+      font: 13px/1.4 "Noto Sans JP", sans-serif;
+      outline: none;
+    }
+    input:focus { border-color: #6a6a72; }
+    .field { margin-bottom: 12px; }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    details {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+    summary {
+      cursor: pointer;
+      font-size: 12px;
+      color: #b8b8b4;
+      margin-bottom: 10px;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 12px;
+    }
+    button {
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font: 700 12px/1 "Noto Sans JP", sans-serif;
+      cursor: pointer;
+    }
+    .btn-primary { background: #f4f4f2; color: #111; }
+    .btn-ghost { background: transparent; color: #f4f4f2; border: 1px solid #4a4a50; }
+    .hint { font-size: 11px; color: #8a8a86; line-height: 1.55; }
+
+    .stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      gap: 22px;
+      min-width: 0;
+      overflow: auto;
+    }
+    .stage-label {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: #6a6a66;
+    }
+
+    .card-slot {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .card-wrap {
+      transform-origin: top center;
+      width: 910px;
+      height: 550px;
+    }
+
+    .card {
+      width: 910px;
+      height: 550px;
+      background: var(--paper);
+      color: var(--ink);
+      position: relative;
+      box-shadow: 0 18px 50px rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+
+    .identity {
+      position: absolute;
+      left: 54px;
+      top: 48px;
+      max-width: 560px;
+    }
+    .name-line {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+    }
+    .name {
+      font-weight: 900;
+      font-size: 46px;
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+    .kana {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .title {
+      margin-top: 14px;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .logo {
+      position: absolute;
+      right: 46px;
+      top: 36px;
+      width: 168px;
+      height: auto;
+      display: block;
+    }
+
+    .contact {
+      position: absolute;
+      left: 54px;
+      bottom: 38px;
+      font-size: 16.5px;
+      line-height: 1.42;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .company {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .info-row {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      column-gap: 10px;
+    }
+    .info-row .k { font-weight: 700; }
+    .addr {
+      margin-top: 4px;
+    }
+
+    .qr {
+      position: absolute;
+      right: 46px;
+      bottom: 38px;
+      width: 148px;
+      height: 148px;
+      background: #fff;
+    }
+    .qr canvas, .qr img, .qr table {
+      width: 148px !important;
+      height: 148px !important;
+    }
+
+    @media (max-width: 1200px) {
+      body { grid-template-columns: 1fr; }
+      .editor { min-height: auto; }
+      .stage { padding: 20px 12px 32px; }
+    }
+
+    @media print {
+      body { display: block; background: #fff; }
+      .editor, .stage-label { display: none !important; }
+      .stage { padding: 0; }
+      .card-wrap { transform: none !important; }
+      .card { box-shadow: none; }
+      @page { size: 91mm 55mm; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="editor">
+    <div>
+      <h1>FLY MEDIA 电子名片</h1>
+      <p class="lead">改左边字段，右边名片即时更新。公司地址默认与纸质名片一致。</p>
+    </div>
+
+    <form id="form" autocomplete="off">
+      <div class="row-2">
+        <div class="field">
+          <label for="name">姓名</label>
+          <input id="name" name="name" value="章 聰源" />
+        </div>
+        <div class="field">
+          <label for="kana">假名</label>
+          <input id="kana" name="kana" value="ショウ ソウゲン" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="title">职位</label>
+        <input id="title" name="title" value="業務担当" />
+      </div>
+      <div class="field">
+        <label for="tel">电话 T</label>
+        <input id="tel" name="tel" value="03-5843-3063" />
+      </div>
+      <div class="field">
+        <label for="mobile">手机 M</label>
+        <input id="mobile" name="mobile" value="080-9708-5593" />
+      </div>
+      <div class="field">
+        <label for="email">邮箱</label>
+        <input id="email" name="email" value="zhangcongyuan@flymedia.co.jp" />
+      </div>
+      <div class="field">
+        <label for="qrMode">二维码</label>
+        <select id="qrMode" name="qrMode">
+          <option value="site">公司官网（与纸质名片相同）</option>
+          <option value="vcard">当前联系人 vCard</option>
+        </select>
+      </div>
+
+      <details>
+        <summary>公司信息（一般不用改）</summary>
+        <div class="field">
+          <label for="company">公司名</label>
+          <input id="company" name="company" value="株式会社 フライメディア" />
+        </div>
+        <div class="field">
+          <label for="zip">邮编</label>
+          <input id="zip" name="zip" value="〒170-0013" />
+        </div>
+        <div class="field">
+          <label for="address">地址</label>
+          <input id="address" name="address" value="東京都豊島区東池袋2-44-2庄司ビル2F" />
+        </div>
+        <div class="field">
+          <label for="bases">海外据点</label>
+          <input id="bases" name="bases" value="海外拠点：北京・上海・台北・香港・マカオ" />
+        </div>
+      </details>
+    </form>
+
+    <div class="actions">
+      <button type="button" class="btn-primary" id="download">下载 PNG</button>
+      <button type="button" class="btn-ghost" id="printBtn">打印</button>
+    </div>
+    <p class="hint">标准日式名片尺寸 91×55mm。打印时选实际大小 / 100%，不要“适应页面”。</p>
+  </aside>
+
+  <main class="stage">
+    <div class="stage-label">PREVIEW · 91mm × 55mm</div>
+    <div class="card-slot" id="cardSlot">
+    <div class="card-wrap" id="cardWrap">
+      <article class="card" id="card">
+        <div class="identity">
+          <div class="name-line">
+            <span class="name" id="v-name">章 聰源</span>
+            <span class="kana" id="v-kana">ショウ ソウゲン</span>
+          </div>
+          <div class="title" id="v-title">業務担当</div>
+        </div>
+        <img class="logo" src="assets/logo.png" alt="FLY MEDIA" />
+        <div class="contact">
+          <div class="company" id="v-company">株式会社 フライメディア</div>
+          <div class="info-row"><span class="k">T</span><span id="v-tel">03-5843-3063</span></div>
+          <div class="info-row"><span class="k">M</span><span id="v-mobile">080-9708-5593</span></div>
+          <div class="info-row"><span class="k">E</span><span id="v-email">zhangcongyuan@flymedia.co.jp</span></div>
+          <div class="addr" id="v-zip">〒170-0013</div>
+          <div class="addr" id="v-address">東京都豊島区東池袋2-44-2庄司ビル2F</div>
+          <div class="addr" id="v-bases">海外拠点：北京・上海・台北・香港・マカオ</div>
+        </div>
+        <div class="qr" id="qr"></div>
+      </article>
+    </div>
+    </div>
+  </main>
+
+  <script src="assets/qrcode.min.js"></script>
+  <script src="assets/html2canvas.min.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const fields = ["name","kana","title","tel","mobile","email","company","zip","address","bases","qrMode"];
+    const map = {
+      name: "v-name", kana: "v-kana", title: "v-title", tel: "v-tel",
+      mobile: "v-mobile", email: "v-email", company: "v-company",
+      zip: "v-zip", address: "v-address", bases: "v-bases"
+    };
+
+    const defaults = Object.fromEntries(fields.map((k) => [k, $(k).value]));
+
+    function load() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("flymedia-meishi") || "{}");
+        fields.forEach((k) => { if (saved[k] != null) $(k).value = saved[k]; });
+      } catch (_) {}
+    }
+
+    function save() {
+      const data = Object.fromEntries(fields.map((k) => [k, $(k).value]));
+      localStorage.setItem("flymedia-meishi", JSON.stringify(data));
+    }
+
+    function vcard() {
+      const n = $("name").value.trim();
+      const parts = n.split(/\s+/);
+      const family = parts[0] || "";
+      const given = parts.slice(1).join(" ");
+      return [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        "FN:" + n,
+        "N:" + family + ";" + given + ";;;",
+        "ORG:" + $("company").value.replace(/^株式会社\s*/, "株式会社"),
+        "TITLE:" + $("title").value,
+        "TEL;TYPE=WORK,VOICE:" + $("tel").value,
+        "TEL;TYPE=CELL:" + $("mobile").value,
+        "EMAIL:" + $("email").value,
+        "ADR;TYPE=WORK:;;" + $("address").value + ";;;" + $("zip").value.replace("〒","") + ";日本",
+        "URL:https://flymedia.co.jp/",
+        "END:VCARD"
+      ].join("\n");
+    }
+
+    function drawQr() {
+      const payload = $("qrMode").value === "vcard" ? vcard() : "https://flymedia.co.jp/";
+      const box = $("qr");
+      box.replaceChildren();
+      new QRCode(box, {
+        text: payload,
+        width: 148,
+        height: 148,
+        colorDark: "#111111",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function render() {
+      Object.entries(map).forEach(([k, id]) => { $(id).textContent = $(k).value; });
+      $("v-kana").style.display = $("kana").value.trim() ? "" : "none";
+      save();
+      drawQr();
+    }
+
+    function fitCard() {
+      const slot = $("cardSlot");
+      const wrap = $("cardWrap");
+      if (!slot || !wrap) return;
+      const scale = Math.max(0.32, Math.min((slot.clientWidth - 8) / 910, 1.45));
+      wrap.style.transform = "scale(" + scale + ")";
+      slot.style.height = (550 * scale) + "px";
+    }
+
+    load();
+    render();
+    fitCard();
+    window.addEventListener("resize", fitCard);
+    fields.forEach((k) => $(k).addEventListener("input", render));
+
+    $("download").addEventListener("click", async () => {
+      const card = $("card");
+      const canvas = await html2canvas(card, {
+        scale: 2,
+        backgroundColor: "#f3f3f1",
+        useCORS: true
+      });
+      const a = document.createElement("a");
+      const safe = $("name").value.replace(/\s+/g, "") || "meishi";
+      a.download = "FLYMEDIA_" + safe + ".png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    });
+
+    $("printBtn").addEventListener("click", () => window.print());
+  </script>
+</body>
+</html>
