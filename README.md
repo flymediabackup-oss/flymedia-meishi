@@ -2,9 +2,11 @@
 
 可改姓名、假名、职位、电话、邮箱的 HTML 名片应用。版式对齐公司纸质名片（91×55mm）。
 
+页面：https://flymediabackup-oss.github.io/flymedia-meishi/
+
 ## 使用
 
-钉钉工作台打开本应用，或浏览器访问 GitHub Pages。
+钉钉工作台打开「电子名片」，或浏览器访问上面的地址。
 
 - 左侧改字段，右侧即时预览
 - **下载 PNG**：导出高清图
